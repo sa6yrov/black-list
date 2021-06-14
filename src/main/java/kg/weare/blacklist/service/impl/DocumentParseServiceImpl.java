@@ -23,24 +23,15 @@ public class DocumentParseServiceImpl implements DocumentParseService {
     @Override
     public List<BadGuyModel> getBadGuyList() throws MalformedURLException {
         URL url = new URL(Objects.requireNonNull(getLinkToSvodKrDocument()));
-        return null;
+
     }
 
     public String getLinkToSvodKrDocument(){
         try {
             Document svodKrPage = Jsoup.connect("https://fiu.gov.kg/sked/9").get();
-            Elements body = svodKrPage.select("body").first().children();
-//            System.out.println(body.html());
-            Element divWrap = body.select("div.wrap").first();
-            Element divContainer = divWrap.select("div.container").first();
-            Element divWrapContent = divContainer.select("div").first();
-            Element divSked = divWrapContent.select("div").first();
-            System.out.println(divSked.html());
-            Element paragraph = divSked.select("p").first();
-//            System.out.println(paragraph.html());
-            String linkForSvodKrDoc = paragraph.select("a").get(1).attr("href");
-
-            return linkForSvodKrDoc;
+            Element divSkedView = svodKrPage.select("div.sked-view").first();
+            Element paragraph = divSkedView.select("p").get(2);
+            return paragraph.select("a").get(1).attr("href");
         } catch (IOException e) {
             e.printStackTrace();
         }
